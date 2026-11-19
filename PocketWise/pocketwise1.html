@@ -1,0 +1,993 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="PocketWise helps students manage pocket money, track expenses and reach savings goals.">
+<title>PocketWise | Student Pocket Money Manager</title>
+
+<style>
+:root {
+  --ink: #182230;
+  --muted: #667085;
+  --line: #e7eaf0;
+  --bg: #f5f7fb;
+  --primary: #6658d3;
+  --green: #16865b;
+  --red: #c24150;
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Arial, sans-serif;
+}
+
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+
+.app {
+  max-width: 1200px;
+  margin: auto;
+  padding: 28px 22px 48px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: var(--primary);
+  color: white;
+  font-size: 23px;
+}
+
+h1 { font-size: 22px; margin: 0; }
+
+.tagline {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+.month-chip {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.welcome { margin: 12px 0 20px; }
+
+.welcome h2 {
+  margin: 0 0 6px;
+  font-size: 27px;
+}
+
+.welcome p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 19px;
+  min-width: 0;
+  box-shadow: 0 12px 32px rgba(24,34,48,.06);
+}
+
+.stat-label { color: var(--muted); font-size: 13px; }
+
+.stat-value {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 13px 0 5px;
+  overflow-wrap: anywhere;
+}
+
+.stat-note, .sub, .goal-caption {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+h3 { margin: 0; font-size: 16px; }
+
+.sub { margin-top: 4px; }
+
+.field { margin-bottom: 13px; }
+
+label {
+  display: block;
+  color: #475467;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+input, select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #dce1e9;
+  border-radius: 11px;
+  background: white;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px #6658d31c;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 11px;
+  padding: 11px 15px;
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+}
+
+.btn:hover { background: #5143bd; }
+.btn.full { width: 100%; }
+
+.btn.secondary {
+  color: var(--primary);
+  background: #f0efff;
+}
+
+.budget-progress {
+  height: 9px;
+  background: #eef0f5;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 12px 0 8px;
+}
+
+.budget-progress span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+  border-radius: 20px;
+  transition: width .3s;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.category-list {
+  display: grid;
+  gap: 14px;
+}
+
+.category-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.category-top span:last-child { color: var(--muted); }
+
+.track {
+  height: 7px;
+  background: #f0f1f5;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.track span {
+  display: block;
+  height: 100%;
+  background: #8b80e5;
+}
+
+.goal-number {
+  font-size: 23px;
+  font-weight: bold;
+  margin: 8px 0 2px;
+}
+
+.notice {
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  background: #f1f0ff;
+  color: #4f46a5;
+}
+
+.notice.warning { background: #fff5e7; color: #a76713; }
+.notice.danger { background: #fff0f1; color: var(--red); }
+
+.expense-card { margin-top: 16px; }
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px 9px;
+  border-bottom: 1px solid #eff1f5;
+  font-size: 13px;
+}
+
+th {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.amount { font-weight: bold; white-space: nowrap; }
+
+.pill {
+  display: inline-block;
+  background: #f1f0ff;
+  color: #5b50bf;
+  border-radius: 30px;
+  padding: 5px 9px;
+  font-size: 11px;
+}
+
+.delete {
+  border: 0;
+  background: #fff0f1;
+  color: var(--red);
+  border-radius: 8px;
+  padding: 6px 9px;
+}
+
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 28px 8px;
+  font-size: 13px;
+}
+
+.afford-result {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+footer {
+  text-align: center;
+  color: #98a2b3;
+  font-size: 11px;
+  margin-top: 25px;
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .app { padding: 18px 13px 35px; }
+  header { align-items: flex-start; }
+  .grid { gap: 10px; }
+  .card { padding: 15px; }
+  .stat-value { font-size: 21px; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .welcome h2 { font-size: 23px; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+  <div class="brand">
+    <div class="logo">₹</div>
+    <div>
+      <h1>PocketWise</h1>
+      <div class="tagline">Your money, your plan.</div>
+    </div>
+  </div>
+  <div class="month-chip" id="monthLabel">Monthly overview</div>
+</header>
+
+<section class="welcome">
+  <h2>Hey, student! 👋</h2>
+  <p>Stay on top of your pocket money and make every rupee count.</p>
+</section>
+
+<section class="grid">
+  <article class="card">
+    <div class="stat-label">💰 Monthly budget</div>
+    <div class="stat-value" id="budgetStat">₹0</div>
+    <div class="stat-note">Your planned pocket money</div>
+  </article>
+
+  <article class="card">
+    <div class="stat-label">🧾 Total spent</div>
+    <div class="stat-value" id="spentStat">₹0</div>
+    <div class="stat-note" id="spentNote">No expenses yet</div>
+  </article>
+
+  <article class="card">
+    <div class="stat-label">👛 Remaining balance</div>
+    <div class="stat-value" id="balanceStat">₹0</div>
+    <div class="stat-note" id="balanceNote">Set a budget to begin</div>
+  </article>
+
+  <article class="card">
+    <div class="stat-label">📅 Daily spending limit</div>
+    <div class="stat-value" id="dailyStat">₹0</div>
+    <div class="stat-note" id="daysNote">Days left this month</div>
+  </article>
+</section>
+
+<section class="main-grid">
+
+<div class="card">
+  <div class="section-head">
+    <div>
+      <h3>Set your monthly budget</h3>
+      <div class="sub">Choose how much money you have.</div>
+    </div>
+  </div>
+
+  <form id="budgetForm">
+    <div class="field">
+      <label for="budgetInput">Monthly pocket money (₹)</label>
+      <input id="budgetInput" type="number" min="1" step="0.01"
+             placeholder="e.g. 8000" required>
+    </div>
+    <button class="btn full" type="submit">Save monthly budget</button>
+  </form>
+
+  <div style="margin-top:22px">
+    <div class="section-head">
+      <div>
+        <h3>Budget usage</h3>
+        <div class="sub">How much of your budget is used?</div>
+      </div>
+      <strong id="usagePercent">0%</strong>
+    </div>
+
+    <div class="budget-progress" id="usageBar"
+         role="progressbar" aria-valuemin="0"
+         aria-valuemax="100" aria-valuenow="0">
+      <span id="usageFill"></span>
+    </div>
+
+    <div class="progress-meta">
+      <span id="usageSpent">₹0 spent</span>
+      <span id="usageTotal">₹0 budget</span>
+    </div>
+  </div>
+
+  <div id="budgetWarning" class="notice" role="status">
+    Set your monthly budget to get started.
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-head">
+    <div>
+      <h3>🎯 Savings goal</h3>
+      <div class="sub">Give yourself something to save for.</div>
+    </div>
+  </div>
+
+  <form id="goalForm">
+    <div class="field">
+      <label for="goalInput">Savings target (₹)</label>
+      <input id="goalInput" type="number" min="1" step="0.01"
+             placeholder="e.g. 2000" required>
+    </div>
+    <button class="btn secondary full" type="submit">Set savings goal</button>
+  </form>
+
+  <div class="goal-number" id="goalProgress">₹0 / ₹0</div>
+  <div class="goal-caption" id="goalCaption">Set a goal to track progress.</div>
+  <div class="budget-progress">
+    <span id="goalFill" style="background:#23a477"></span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-head">
+    <div>
+      <h3>➕ Add an expense</h3>
+      <div class="sub">Record what you spend.</div>
+    </div>
+  </div>
+
+  <form id="expenseForm">
+    <div class="field">
+      <label for="expenseName">Expense name</label>
+      <input id="expenseName" type="text" maxlength="45"
+             placeholder="e.g. Lunch at canteen" required>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="expenseAmount">Amount (₹)</label>
+        <input id="expenseAmount" type="number" min="0.01"
+               step="0.01" placeholder="150" required>
+      </div>
+
+      <div class="field">
+        <label for="expenseCategory">Category</label>
+        <select id="expenseCategory" required>
+          <option value="Food">🍔 Food</option>
+          <option value="Transport">🚌 Transport</option>
+          <option value="Study">📚 Study</option>
+          <option value="Shopping">🛍️ Shopping</option>
+          <option value="Other">✨ Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="expenseDate">Date</label>
+      <input id="expenseDate" type="date" required>
+    </div>
+
+    <button class="btn full" type="submit">Add expense</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="section-head">
+    <div>
+      <h3>📊 Where your money goes</h3>
+      <div class="sub">Category-wise spending.</div>
+    </div>
+  </div>
+
+  <div class="category-list" id="categoryList"></div>
+  <div class="notice" id="spendingTip">
+    Add expenses to see your spending pattern.
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-head">
+    <div>
+      <h3>🛒 Can I afford this?</h3>
+      <div class="sub">Check before making a purchase.</div>
+    </div>
+  </div>
+
+  <form id="affordForm">
+    <div class="field">
+      <label for="purchaseName">What do you want to buy?</label>
+      <input id="purchaseName" type="text" maxlength="45"
+             placeholder="e.g. New headphones" required>
+    </div>
+
+    <div class="field">
+      <label for="purchaseAmount">Purchase amount (₹)</label>
+      <input id="purchaseAmount" type="number" min="0.01"
+             step="0.01" placeholder="1200" required>
+    </div>
+
+    <button class="btn secondary full" type="submit">
+      Check affordability
+    </button>
+  </form>
+
+  <div class="afford-result" id="affordResult" aria-live="polite"></div>
+</div>
+
+</section>
+
+<section class="card expense-card">
+  <div class="section-head">
+    <div>
+      <h3>Recent expenses</h3>
+      <div class="sub">Your latest transactions.</div>
+    </div>
+    <span class="pill" id="expenseCount">0 entries</span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Expense</th>
+          <th>Category</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="expenseRows"></tbody>
+    </table>
+    <div class="empty" id="emptyState">
+      No expenses recorded yet. Add your first expense above.
+    </div>
+  </div>
+</section>
+
+<footer>
+  PocketWise · Student Pocket Money Manager · Your data is saved in this browser.
+</footer>
+
+</div>
+
+<script>
+"use strict";
+
+// Application data
+const STORAGE_KEY = "pocketwise_student_manager_v1";
+
+const categories = [
+  "Food", "Transport", "Study", "Shopping", "Other"
+];
+
+const money = value =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2
+  }).format(value || 0);
+
+const today = new Date();
+
+const monthKey =
+  `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}`;
+
+const dateInput = document.getElementById("expenseDate");
+dateInput.value = today.toISOString().slice(0,10);
+
+// Load saved data
+function loadData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+    if (saved && typeof saved === "object" &&
+        saved.month === monthKey) {
+      return {
+        month: monthKey,
+        budget: Number(saved.budget) || 0,
+        goal: Number(saved.goal) || 0,
+        expenses: Array.isArray(saved.expenses)
+          ? saved.expenses : []
+      };
+    }
+  } catch (error) {
+    console.warn("Could not read saved data:", error);
+  }
+
+  return {
+    month: monthKey,
+    budget: 0,
+    goal: 0,
+    expenses: []
+  };
+}
+
+let data = loadData();
+
+// Save data in browser Local Storage
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.warn("Could not save data:", error);
+  }
+}
+
+// Calculate total expenses
+function totalSpent() {
+  return data.expenses.reduce(
+    (sum, item) => sum + Number(item.amount), 0
+  );
+}
+
+// Calculate remaining days
+function daysRemaining() {
+  const lastDay = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  ).getDate();
+
+  return Math.max(1, lastDay - today.getDate() + 1);
+}
+
+// Update dashboard
+function render() {
+  const spent = totalSpent();
+  const balance = data.budget - spent;
+  const daily = Math.max(0, balance) / daysRemaining();
+
+  const percent = data.budget > 0
+    ? Math.min(100, (spent / data.budget) * 100)
+    : 0;
+
+  document.getElementById("monthLabel").textContent =
+    today.toLocaleDateString("en-IN", {
+      month: "long", year: "numeric"
+    });
+
+  document.getElementById("budgetStat").textContent =
+    money(data.budget);
+
+  document.getElementById("spentStat").textContent =
+    money(spent);
+
+  document.getElementById("spentNote").textContent =
+    `${data.expenses.length} expenses recorded`;
+
+  document.getElementById("balanceStat").textContent =
+    money(balance);
+
+  document.getElementById("balanceStat").className =
+    `stat-value ${balance < 0 ? "negative" : "positive"}`;
+
+  document.getElementById("balanceNote").textContent =
+    balance < 0 ? "You are over your budget" :
+    "Money available this month";
+
+  document.getElementById("dailyStat").textContent =
+    money(daily);
+
+  document.getElementById("daysNote").textContent =
+    `${daysRemaining()} days left in this month`;
+
+  document.getElementById("usagePercent").textContent =
+    `${Math.round(percent)}%`;
+
+  document.getElementById("usageFill").style.width =
+    `${percent}%`;
+
+  document.getElementById("usageBar")
+    .setAttribute("aria-valuenow", String(Math.round(percent)));
+
+  document.getElementById("usageSpent").textContent =
+    `${money(spent)} spent`;
+
+  document.getElementById("usageTotal").textContent =
+    `${money(data.budget)} budget`;
+
+  // Budget warning
+  const warning = document.getElementById("budgetWarning");
+
+  if (!data.budget) {
+    warning.className = "notice";
+    warning.textContent =
+      "Set your monthly budget to get started.";
+  } else if (spent > data.budget) {
+    warning.className = "notice danger";
+    warning.textContent =
+      `You exceeded your budget by ${money(spent-data.budget)}.`;
+  } else if (percent >= 80) {
+    warning.className = "notice warning";
+    warning.textContent =
+      "Careful! You have used at least 80% of your budget.";
+  } else {
+    warning.className = "notice";
+    warning.textContent =
+      `You are within budget. Try to spend near ${money(daily)} per day.`;
+  }
+
+  renderCategories();
+  renderGoal();
+  renderExpenses();
+}
+
+// Display category-wise spending
+function renderCategories() {
+  const container = document.getElementById("categoryList");
+  const total = totalSpent();
+
+  container.innerHTML = "";
+
+  categories.forEach(category => {
+    const amount = data.expenses
+      .filter(item => item.category === category)
+      .reduce((sum,item) => sum + Number(item.amount), 0);
+
+    const percent = total ? (amount / total) * 100 : 0;
+
+    const row = document.createElement("div");
+
+    const top = document.createElement("div");
+    top.className = "category-top";
+
+    const name = document.createElement("strong");
+    name.textContent = category;
+
+    const value = document.createElement("span");
+    value.textContent =
+      `${money(amount)} · ${Math.round(percent)}%`;
+
+    top.append(name, value);
+
+    const track = document.createElement("div");
+    track.className = "track";
+
+    const fill = document.createElement("span");
+    fill.style.width = `${percent}%`;
+
+    track.appendChild(fill);
+    row.append(top, track);
+    container.appendChild(row);
+  });
+
+  const highest = categories.map(category => ({
+    category,
+    amount: data.expenses
+      .filter(item => item.category === category)
+      .reduce((sum,item) => sum + Number(item.amount), 0)
+  })).sort((a,b) => b.amount-a.amount)[0];
+
+  document.getElementById("spendingTip").textContent =
+    total
+      ? `Your highest spending category is ${highest.category}. Review it if you want to save more.`
+      : "Add expenses to see your spending pattern.";
+}
+
+// Savings goal progress
+function renderGoal() {
+  const saved = Math.max(0, data.budget-totalSpent());
+
+  const progress = data.goal
+    ? Math.min(100, (saved/data.goal)*100)
+    : 0;
+
+  document.getElementById("goalProgress").textContent =
+    `${money(saved)} / ${money(data.goal)}`;
+
+  document.getElementById("goalCaption").textContent =
+    data.goal
+      ? `${Math.round(progress)}% of your target covered · ${money(Math.max(0,data.goal-saved))} to go`
+      : "Set a goal to track your progress.";
+
+  document.getElementById("goalFill").style.width =
+    `${progress}%`;
+}
+
+// Display expense records
+function renderExpenses() {
+  const body = document.getElementById("expenseRows");
+  body.innerHTML = "";
+
+  const sorted = [...data.expenses].sort(
+    (a,b) => b.date.localeCompare(a.date) || b.id-a.id
+  );
+
+  document.getElementById("expenseCount").textContent =
+    `${sorted.length} entries`;
+
+  document.getElementById("emptyState").hidden =
+    sorted.length > 0;
+
+  sorted.forEach(item => {
+    const tr = document.createElement("tr");
+
+    const name = document.createElement("td");
+    name.textContent = item.name;
+
+    const cat = document.createElement("td");
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = item.category;
+    cat.appendChild(pill);
+
+    const date = document.createElement("td");
+    date.textContent = new Date(
+      `${item.date}T00:00:00`
+    ).toLocaleDateString("en-IN");
+
+    const amount = document.createElement("td");
+    amount.className = "amount";
+    amount.textContent = money(item.amount);
+
+    const action = document.createElement("td");
+    const del = document.createElement("button");
+
+    del.className = "delete";
+    del.textContent = "Delete";
+    del.setAttribute("aria-label", `Delete ${item.name}`);
+
+    del.addEventListener("click", () => deleteExpense(item.id));
+
+    action.appendChild(del);
+    tr.append(name,cat,date,amount,action);
+    body.appendChild(tr);
+  });
+}
+
+// Delete an expense
+function deleteExpense(id) {
+  data.expenses = data.expenses.filter(
+    item => item.id !== id
+  );
+
+  saveData();
+  render();
+}
+
+// Monthly budget form
+document.getElementById("budgetForm")
+.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const value = Number(
+    document.getElementById("budgetInput").value
+  );
+
+  if (!Number.isFinite(value) || value <= 0) {
+    alert("Please enter a valid budget greater than zero.");
+    return;
+  }
+
+  data.budget = value;
+  saveData();
+  render();
+  event.target.reset();
+});
+
+// Savings goal form
+document.getElementById("goalForm")
+.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const value = Number(
+    document.getElementById("goalInput").value
+  );
+
+  if (!Number.isFinite(value) || value <= 0) {
+    alert("Please enter a valid savings goal.");
+    return;
+  }
+
+  data.goal = value;
+  saveData();
+  render();
+  event.target.reset();
+});
+
+// Add expense form
+document.getElementById("expenseForm")
+.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name =
+    document.getElementById("expenseName").value.trim();
+
+  const amount =
+    Number(document.getElementById("expenseAmount").value);
+
+  const category =
+    document.getElementById("expenseCategory").value;
+
+  const date =
+    document.getElementById("expenseDate").value;
+
+  if (!name || !Number.isFinite(amount) || amount <= 0 ||
+      !categories.includes(category) || !date) {
+    alert("Please enter valid expense details.");
+    return;
+  }
+
+  if (date.slice(0,7) !== monthKey) {
+    alert("Please add expenses dated in the current month.");
+    return;
+  }
+
+  data.expenses.push({
+    id: Date.now(),
+    name,
+    amount,
+    category,
+    date
+  });
+
+  saveData();
+  render();
+
+  event.target.reset();
+  dateInput.value = today.toISOString().slice(0,10);
+});
+
+// Check planned purchase affordability
+document.getElementById("affordForm")
+.addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name =
+    document.getElementById("purchaseName").value.trim();
+
+  const amount =
+    Number(document.getElementById("purchaseAmount").value);
+
+  if (!name || !Number.isFinite(amount) || amount <= 0) {
+    alert("Enter a purchase name and a valid amount.");
+    return;
+  }
+
+  const balance = data.budget-totalSpent();
+  const after = balance-amount;
+
+  const result = document.getElementById("affordResult");
+
+  if (data.budget > 0 && amount <= balance) {
+    result.textContent =
+      `It fits your current balance! If you buy ${name}, you will have ${money(after)} left.`;
+    result.className = "afford-result positive";
+  } else {
+    result.textContent =
+      `This purchase is not within your current budget. You would be short by ${money(Math.max(0,amount-balance))}.`;
+    result.className = "afford-result negative";
+  }
+});
+
+// Show the application
+render();
+
+</script>
+</body>
+</html>
